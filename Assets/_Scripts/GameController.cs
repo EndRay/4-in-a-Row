@@ -8,16 +8,6 @@ public class GameController : MonoBehaviour
 
     private bool _p1Move;
 
-    private int[][] _rows =
-    {
-        new int[] {1, 0},
-        new int[] {2, 0},
-        new int[] {3, 0},
-        new int[] {-1, 0},
-        new int[] {-2, 0},
-        new int[] {-3, 0}
-    };
-
     public GameObject Grid;
 
     public GameObject[] Circles;
@@ -240,7 +230,6 @@ public class GameController : MonoBehaviour
 
     private void DrawTest()
     {
-        bool isDraw = true;
         for (int x = 3; x < 10; x++)
         {
             for (int y = 3; y < 9; y++)
