@@ -20,6 +20,9 @@ public class Grid : MonoBehaviour
 
     private void OnMouseDown()
     {
-        GameController.CreateCircle(XPosition);
+        if (!GameController.IsWin)
+        {
+            GameController.CreateCircle(XPosition);
+        }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using DG.Tweening;
-using UnityEngine.Networking.Match;
 
 public class GameController : MonoBehaviour
 {
@@ -23,6 +21,10 @@ public class GameController : MonoBehaviour
     public GameObject Grid;
 
     public GameObject[] Circles;
+
+    public bool IsWin;
+
+    public GameObject[] WinText;
 
     // Use this for initialization
     private void Start()
@@ -76,17 +78,21 @@ public class GameController : MonoBehaviour
         createCircle.transform.DOMove(new Vector2(x, 9), Mathf.Max((5 - yPos)/10f, 0.1f)).From().SetEase(Ease.Linear);
         _p1Move = !_p1Move;
         
-        if (Test(x, yPos) == 1)
+        if (WinTest(x, yPos) == 1)
         {
-            Win(true);
+            Win(1);
         }
-        if (Test(x, yPos) == 2)
+        else if (WinTest(x, yPos) == 2)
         {
-            Win(false);
+            Win(2);
+        }
+        else
+        {
+            DrawTest();
         }
     }
 
-    private int Test(int x, int y)
+    private int WinTest(int x, int y)
     {
         int inARow = 1;
         int player = _board[x, y];
@@ -204,20 +210,20 @@ public class GameController : MonoBehaviour
         return 0;
     }
 
-    private void Win(bool isP1)
+    private void Win(int win)
     {
-        if (isP1)
-        {
-            Debug.Log("Red Win!");
-        } 
-        else
-        {
-            Debug.Log("Yellow Win!");
-        }
+        IsWin = true;
+        Invoke("DestroyLevel",5);
+        WinText[win].SetActive(true);
     }
 
     private void DestroyLevel()
     {
+        foreach (var text in WinText)
+        {
+            text.SetActive(false);
+        }
+        IsWin = false;
         foreach(var created in GameObject.FindGameObjectsWithTag("Created"))
         {
             Destroy(created);
@@ -232,8 +238,19 @@ public class GameController : MonoBehaviour
         GenerateBoard();
     }
 
-    private void Draw()
+    private void DrawTest()
     {
-        Debug.Log("Draw");
+        bool isDraw = true;
+        for (int x = 3; x < 10; x++)
+        {
+            for (int y = 3; y < 9; y++)
+            {
+                if (_board[x, y] == 0)
+                {
+                    return;
+                }
+            }
+        }
+        Win(0);
     }
 }
